@@ -31,16 +31,16 @@ get '/API/v1/:utterance' do
       send_file 'public/images/bar_page_3.png', :type => :png, :disposition => 'attachment'
     when /show.*opportunity/i
       send_file 'public/images/bar_page_4.png', :type => :png, :disposition => 'attachment'
-    when //i
-      send_file 'public/images/bar_page_5.png', :type => :png, :disposition => 'attachment'
+    #when //i
+    #  send_file 'public/images/bar_page_5.png', :type => :png, :disposition => 'attachment'
     when /change.*closing.*date/i
       send_file 'public/images/bar_page_6.png', :type => :png, :disposition => 'attachment'
     when /changing.*closing.*date/i
       send_file 'public/images/bar_page_7.png', :type => :png, :disposition => 'attachment'
     when /changed.*closing.*date/i
       send_file 'public/images/bar_page_8.png', :type => :png, :disposition => 'attachment'
-    when //i
-      send_file 'public/images/bar_page_9.png', :type => :png, :disposition => 'attachment'
+    #when //i
+    #  send_file 'public/images/bar_page_9.png', :type => :png, :disposition => 'attachment'
     when /on track.*quota/i
       send_file 'public/images/bar_page_10.png', :type => :png, :disposition => 'attachment'
     when /show.*quota/i
