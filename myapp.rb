@@ -19,33 +19,37 @@ get '/hello/:name' do
 end
 
 get '/API/v1/:utterance' do
-  case params[:utterance]
+  send_file 'public/' + parse_utterance(params[:utterance]), :type => :png, :disposition => 'attachment'
+end
+
+get '/API/v2/:utterance' do
+  content_type :json
+  {:utterance => params[:utterance], :image => "#{request.scheme}://#{[request.host, request.port].join(':')}/#{parse_utterance(params[:utterance])}"}.to_json
+end
+
+def parse_utterance (u)
+  case u
     when /test/i
-      send_file 'public/images/rails.png', :type => :png, :disposition => 'attachment'
-      # Better to return URI of Image!!! + data
+      'images/rails.png'
     when /help/i
-      send_file 'public/images/bar_page_0.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_0.png'
     when /tesla.*opportunity/i
-      send_file 'public/images/bar_page_2.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_2.png'
     when /navigating/i
-      send_file 'public/images/bar_page_3.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_3.png'
     when /show.*opportunity/i
-      send_file 'public/images/bar_page_4.png', :type => :png, :disposition => 'attachment'
-    #when //i
-    #  send_file 'public/images/bar_page_5.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_4.png'
     when /change.*closing.*date/i
-      send_file 'public/images/bar_page_6.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_6.png'
     when /changing.*closing.*date/i
-      send_file 'public/images/bar_page_7.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_7.png'
     when /changed.*closing.*date/i
-      send_file 'public/images/bar_page_8.png', :type => :png, :disposition => 'attachment'
-    #when //i
-    #  send_file 'public/images/bar_page_9.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_8.png'
     when /on.*track.*quota/i
-      send_file 'public/images/bar_page_10.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_10.png'
     when /show.*quota/i
-      send_file 'public/images/bar_page_11.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_11.png'
     else
-      send_file 'public/images/bar_page_0.png', :type => :png, :disposition => 'attachment'
+      'images/bar_page_0.png'
   end
 end
