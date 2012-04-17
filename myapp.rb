@@ -41,7 +41,7 @@ get '/API/v1/:utterance' do
       send_file 'public/images/bar_page_8.png', :type => :png, :disposition => 'attachment'
     #when //i
     #  send_file 'public/images/bar_page_9.png', :type => :png, :disposition => 'attachment'
-    when /on track.*quota/i
+    when /on.*track.*quota/i
       send_file 'public/images/bar_page_10.png', :type => :png, :disposition => 'attachment'
     when /show.*quota/i
       send_file 'public/images/bar_page_11.png', :type => :png, :disposition => 'attachment'
