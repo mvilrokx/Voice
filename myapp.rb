@@ -3,6 +3,7 @@ require 'sinatra'
 require 'sinatra/respond_to'
 require 'json'
 require 'haml'
+require 'active_support'
 
 Sinatra::Application.register Sinatra::RespondTo
 
@@ -24,7 +25,10 @@ end
 
 get '/API/v2/:utterance' do
   content_type :json
-  {:utterance => params[:utterance], :image => "#{request.scheme}://#{[request.host, request.port].join(':')}/#{parse_utterance(params[:utterance])}"}.to_json
+  {:utterance => params[:utterance], 
+   :image => "#{request.scheme}://#{[request.host, request.port].join(':')}/#{parse_utterance(params[:utterance])}",
+   :img_data => ActiveSupport::Base64.encode64(File.read("public/#{parse_utterance(params[:utterance])}")).gsub("\n", '')
+   }.to_json
 end
 
 def parse_utterance (u)
