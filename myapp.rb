@@ -4,6 +4,13 @@ require 'sinatra/respond_to'
 require 'json'
 require 'haml'
 require 'active_support'
+require "base64"
+require 'dalli'
+
+# memcache configuration
+set :cache, Dalli::Client.new
+set :enable_cache, true
+set :days_30, 2592000
 
 Sinatra::Application.register Sinatra::RespondTo
 
@@ -20,40 +27,60 @@ get '/hello/:name' do
 end
 
 get '/API/v1/:utterance' do
-  send_file 'public/' + parse_utterance(params[:utterance]), :type => :png, :disposition => 'attachment'
+  reply = parse_utterance(params[:utterance])
+  send_file 'public/' + reply[:img], :type => :png, :disposition => 'attachment'
 end
 
 get '/API/v2/:utterance' do
   content_type :json
-  {:utterance => params[:utterance], 
-   :image => "#{request.scheme}://#{[request.host, request.port].join(':')}/#{parse_utterance(params[:utterance])}",
-   :img_data => ActiveSupport::Base64.encode64(File.read("public/#{parse_utterance(params[:utterance])}")).gsub("\n", '')
-   }.to_json
+  return_data(params[:utterance])
 end
 
-def parse_utterance (u)
+def return_data(key, time_to_live=settings.days_30)
+
+  if !settings.enable_cache 
+    return answer(key)
+  end
+
+  if settings.cache.get(key) == nil
+    settings.cache.set(key, answer(key), ttl=time_to_live)
+  end
+ 
+  return settings.cache.get(key)
+
+end
+
+def answer(u)
+  reply = parse_utterance(u)
+  {:reply => reply[:reply],
+   :image_url => "#{request.scheme}://#{[request.host, request.port].join(':')}/#{reply[:img]}",
+   :img_data => Base64.encode64(File.read("public/#{reply[:img]}")).gsub("\n", '')
+  }.to_json
+end
+
+def parse_utterance(u = {})
   case u
     when /test/i
-      'images/rails.png'
+      {:img => 'images/rails.png', :reply => "test"}
     when /help/i
-      'images/bar_page_0.png'
+      {:img => 'images/bar_page_0.png', :reply => "how can i help you"}
     when /tesla.*opportunity/i
-      'images/bar_page_2.png'
+      {:img => 'images/bar_page_2.png', :reply => "go to tesla motors opportunity. should i do it?"}
     when /navigating/i
-      'images/bar_page_3.png'
+      {:img => 'images/bar_page_3.png', :reply => ""}
     when /show.*opportunity/i
-      'images/bar_page_4.png'
+      {:img => 'images/bar_page_4.png', :reply => ""}
     when /change.*closing.*date/i
-      'images/bar_page_6.png'
+      {:img => 'images/bar_page_6.png', :reply => "changing the closing date to january 15th 2013. should i do it?"}
     when /changing.*closing.*date/i
-      'images/bar_page_7.png'
+      {:img => 'images/bar_page_7.png', :reply => ""}
     when /changed.*closing.*date/i
-      'images/bar_page_8.png'
+      {:img => 'images/bar_page_8.png', :reply => ""}
     when /on.*track.*quota/i
-      'images/bar_page_10.png'
+      {:img => 'images/bar_page_10.png', :reply => "am i on track to hit my quota? should I find out?"}
     when /show.*quota/i
-      'images/bar_page_11.png'
+      {:img => 'images/bar_page_11.png', :reply => ""}
     else
-      'images/bar_page_0.png'
+      {:img => 'images/bar_page_0.png', :reply => "how can i help you"}
   end
 end

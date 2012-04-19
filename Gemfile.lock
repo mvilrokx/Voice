@@ -5,6 +5,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     daemons (1.1.8)
+    dalli (2.0.3)
     eventmachine (0.12.10)
     haml (3.1.4)
     i18n (0.6.0)
@@ -30,6 +31,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  dalli
   haml
   json
   sinatra
