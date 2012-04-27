@@ -67,11 +67,11 @@ def parse_utterance(p = {})
       {:img => 'images/rails.png', :reply => "test"}
     when /help/i
       {:img => 'images/bar_page_0.png', :reply => "how can i help you"}
-    when /(do.*it|yes)/i      
+    when /(do.*it|yes|find.*out)/i      
       case p[:state]
         when "2"
           {:img => 'images/bar_page_4.png', :reply => ""}
-        when "7"
+        when "6"
           {:img => 'images/bar_page_8.png', :reply => ""}
         when "10"
           {:img => 'images/bar_page_11.png', :reply => ""}
@@ -84,12 +84,12 @@ def parse_utterance(p = {})
       {:img => 'images/bar_page_3.png', :reply => ""}
     when /show.*opportunity/i
       {:img => 'images/bar_page_4.png', :reply => ""}
+    when /changed.*closing.*date/i
+      {:img => 'images/bar_page_8.png', :reply => ""}
     when /change.*closing.*date/i
       {:img => 'images/bar_page_6.png', :reply => "changing the closing date to january 15th 2013. should i do it?"}
 #    when /changing.*closing.*date/i
 #      {:img => 'images/bar_page_7.png', :reply => ""}
-    when /changed.*closing.*date/i
-      {:img => 'images/bar_page_8.png', :reply => ""}
     when /on.*track.*quota/i
       {:img => 'images/bar_page_10.png', :reply => "am i on track to hit my quota? should I find out?"}
     when /show.*quota/i
